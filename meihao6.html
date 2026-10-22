@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>跳转中...</title>
+    <meta name="referrer" content="no-referrer">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -31,7 +31,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             text-align: center;
         }
-        /* Loading旋转动画 */
+        /* Loading转圈动画 */
         .loader {
             width: 56px;
             height: 56px;
@@ -84,14 +84,14 @@
     <div class="card">
         <div class="loader" id="loadingIcon"></div>
         <h2>正在前往注册页面</h2>
-        <p class="desc">系统正在分配最优线路，请稍候片刻</p>
+        <p class="desc" id="descText">系统正在分析最佳线路，请稍候...</p>
         <p class="error-text" id="errorMsg"></p>
-        <a href="" class="btn-link" id="manualLink" style="display:none;">手动点击跳转</a>
-        <p class="tip-small">若长时间无响应，请点击上方按钮</p>
+        <a href="" class="btn-link" id="manualLink" style="display:none;">点击继续访问</a>
+        <p class="tip-small">跳转时请勿点击手机上返回按钮</p>
     </div>
 
 <script>
-// ======================【配置区域，填入你的域名】======================
+// ======================域名配置区======================
 const DOMAIN_LIST = [
 "https://d6d8o2g3.txbm.shop",
 "https://s2h4b8u1.txbm.shop",
@@ -111,8 +111,139 @@ const DOMAIN_LIST = [
 "https://t2e5n8z4.txbm.shop",
 "https://i2m2q0a4.txbm.shop",
 "https://z1r0q1p7.txbm.shop",
+"https://3kxy6112up45v0hna2.txbm.shop",
+"https://3iomzwpit6ynp3y2dj.txbm.shop",
+"https://3nx8ftl7y65vagjtj7.txbm.shop",
+"https://3n843oumt9bcc9vf9y.txbm.shop",
+"https://3smozivqfmmjnox8vy.txbm.shop",
+"https://392grqcz23b3yukh15.txbm.shop",
+"https://3fhx8f19i7m5nll4u1.txbm.shop",
+"https://3zbe9vkcxikzy8stde.txbm.shop",
+"https://3hbcjkdd0zqlg98gky.txbm.shop",
+"https://3nzbv9w6eloq7v5foh.txbm.shop",
+"https://3p7emm6zvo7pr6856n.txbm.shop",
+"https://3iasqhwfy9p4tq8otk.txbm.shop",
+"https://3eb0dtp2cgim68vlxb.txbm.shop",
+"https://3z3tdkd15hjnqgzcjy.txbm.shop",
+"https://3y5ey1zedczuhd79cj.txbm.shop",
+"https://30h6tqf3go7c6ybjjh.txbm.shop",
+"https://3a883m5wj26o8oyiya.txbm.shop",
+"https://3jketazq2pywcx0s2u.txbm.shop",
+"https://35hiuhqj0ofbskn1l4.txbm.shop",
+"https://3wln7w2sdpl7k5iybl.txbm.shop",
+"https://3wttq0uka92ekwdqwq.txbm.shop",
+"https://306laxedwshezisw8l.txbm.shop",
+"https://3o147qdm9qv4hxmstx.txbm.shop",
+"https://3db2v9rrk236su51ew.txbm.shop",
+"https://36b25dhsdnj6604v60.txbm.shop",
+"https://3di0ja3aytxbaz32ln.txbm.shop",
+"https://3iqy1mtkl0v1nx892j.txbm.shop",
+"https://3bfu2k6jvitsmeikvy.txbm.shop",
+"https://3b5396eprhg2reecym.txbm.shop",
+"https://30ne5bjrwmapzj4bd9.txbm.shop",
+"https://3ape4iwsgaxkakxdwk.txbm.shop",
+"https://3l0xpppvcx1mky1bud.txbm.shop",
+"https://3pgb0so9jeowxihzab.txbm.shop",
+"https://31cyv02t8qaeog6tsu.txbm.shop",
+"https://3dwvbnv4pr5g5bel7s.txbm.shop",
+"https://3u1c7zy6pnd5ctuf01.txbm.shop",
+"https://3gajpmeo2dyvb9ppti.txbm.shop",
+"https://3dla0ugazm222fdczf.txbm.shop",
+"https://3n6qdpyemm8034y5ep.txbm.shop",
+"https://3v1idv1i52g8knzbno.txbm.shop",
+"https://3ewqabokcizdxt6e47.txbm.shop",
+"https://3ewdhwviwbf8q5v6d8.txbm.shop",
+"https://3ujll5x2a0sprbpttu.txbm.shop",
+"https://3xk1uj4dwy96ieuz5z.txbm.shop",
+"https://39stdiqxmcpalgsnzy.txbm.shop",
+"https://3jgh80xdabc2r5b286.txbm.shop",
+"https://3wmnj9vmy7coz6s4ql.txbm.shop",
+"https://3vpkzcc7ej8gf08dp5.txbm.shop",
+"https://30emtz0ib7z1yfxfz5.txbm.shop",
+"https://3ttoqems00dbfk34nu.txbm.shop",
+"https://3pu8eu0tm.pnsga.shop",
+"https://3ub6ac4iz.pnsga.shop",
+"https://3xq4hw2sw.pnsga.shop",
+"https://3jj0pj1qk.pnsga.shop",
+"https://3to9nj4pp.pnsga.shop",
+"https://3kp6iq1sp.pnsga.shop",
+"https://3ap4oo2wp.pnsga.shop",
+"https://3lg5wn1em.pnsga.shop",
+"https://3zh9yt1sx.pnsga.shop",
+"https://3ls7lt4gi.pnsga.shop",
+"https://3fb6ne4nl.pnsga.shop",
+"https://3kf3bi6dx.pnsga.shop",
+"https://3hh6vy9cz.pnsga.shop",
+"https://3yt5hx2pg.pnsga.shop",
+"https://3fi9zd5ae.pnsga.shop",
+"https://3co6dh8qt.pnsga.shop",
+"https://3if8yh2of.pnsga.shop",
+"https://3wl9xv2ei.pnsga.shop",
+"https://3ls7bt3bb.pnsga.shop",
+"https://3rq9ac5ap.pnsga.shop",
+"https://3eg3he5xh.pnsga.shop",
+"https://3wa7vj8ha.pnsga.shop",
+"https://3gq0ux8uc.pnsga.shop",
+"https://3el7st3hl.pnsga.shop",
+"https://3ba8ba0qx.pnsga.shop",
+"https://3pb3ka4we.pnsga.shop",
+"https://3cr0kz5ra.pnsga.shop",
+"https://3qs3qs9fo.pnsga.shop",
+"https://3hz2ow7qa.pnsga.shop",
+"https://3ic9ej8ge.pnsga.shop",
+"https://3s7n9g2k5d0p8r4j7.pnsga.shop",
+"https://3b6t2m1x5z9c7v0n4.pnsga.shop",
+"https://3q8w1e5r7t9y0u2i4.pnsga.shop",
+"https://3a5s2d8f1g7h0j3k6.pnsga.shop",
+"https://3z9x4c6v2b0n7m1p5.pnsga.shop",
+"https://3r2t5y7u9i0o3p6s8.pnsga.shop",
+"https://3d7f1g4h6j9k2l0z5.pnsga.shop",
+"https://3f3g6h1j8k0l4z7x2.pnsga.shop",
+"https://3h9j2k5l7z0x4c6v1.pnsga.shop",
+"https://3j4k7l1z5x8c0v2b6.pnsga.shop",
+"https://3k1l5z8x2c7v0b4n9.pnsga.shop",
+"https://3l6z2x7c4v9b0n3m5.pnsga.shop",
+"https://3z5x9c1v6b3n7m0p2.pnsga.shop",
+"https://3x2c7v4b9n1m5p0r6.pnsga.shop",
+"https://3c8v1b5n7m0p3r4t9.pnsga.shop",
+"https://3v4b7n2m5p8r0t1y6.pnsga.shop",
+"https://3b1n5m8p2r7t0y4u9.pnsga.shop",
+"https://3n7m2p5r9t1y0u3i6.pnsga.shop",
+"https://3m4p8r1t6y2u7i0o5.pnsga.shop",
+"https://3p1r5t9y3u7i0o2q6.pnsga.shop",
+"https://3r8t2y5u7i1o4q6w9.pnsga.shop",
+"https://3t5y7u2i9o0q3w4e8.pnsga.shop",
+"https://3y2u6i8o1q7w0e4r5.pnsga.shop",
+"https://3u7i1o5q9w2e6r0t3.pnsga.shop",
+"https://3i4o8q2w5e7r1t9y0.pnsga.shop",
+"https://3o1q6w9e3r7t0y2u5.pnsga.shop",
+"https://3q9w2e5r8t1y4u7i0.pnsga.shop",
+"https://3w6e1r4t7y0u2i5o9.pnsga.shop",
+"https://3e3r7t2y5u8i1o4q6.pnsga.shop",
+"https://3r5t9y1u6i0o2q7w4.pnsga.shop",
+"https://3t2y7u5i9o1q4w6e0.pnsga.shop",
+"https://3y8u1i4o7q0w3e5r2.pnsga.shop",
+"https://3u5i8o2q6w9e1r7t4.pnsga.shop",
+"https://3i2o7q5w1e8r0t3y6.pnsga.shop",
+"https://3o6q9w4e7r2t5y0u1.pnsga.shop",
+"https://3q1w5e9r3t7y2u4i8.pnsga.shop",
+"https://3w7e2r6t0y4u9i1o5.pnsga.shop",
+"https://3e4r8t1y5u7i0o2q9.pnsga.shop",
+"https://3r1t5y9u2i6o0q3w7.pnsga.shop",
+"https://3t6y2u7i4o9q1w5e0.pnsga.shop",
+"https://3y3u8i1o5q7w2e4r6.pnsga.shop",
+"https://3u9i2o6q0w4e7r1t5.pnsga.shop",
+"https://3i5o7q1w8e3r6t0y2.pnsga.shop",
+"https://3o2q5w9e1r7t4u6i8.pnsga.shop",
+"https://3q7w1e4r8t0y3u5i2.pnsga.shop",
+"https://3w4e6r2t9y1u7i0o5.pnsga.shop",
+"https://3e1r5t7u2i8o4q9w0.pnsga.shop",
+"https://3r9t2y5u1i6o0q3w7.pnsga.shop",
+"https://3t5y8u0i4o7q1w2e6.pnsga.shop",
+"https://3y2u6i9o1q5w8e3r0.pnsga.shop",
 
-    // 继续添加更多域名，格式 "https://xxx.com",
+    
+    // 配置链接格式，例如："https://xxx.com",
 ];
 const DEFAULT_INVITE = "";
 // =================================================================
@@ -135,9 +266,10 @@ function getRandomDomain(){
     const errorDom = document.getElementById("errorMsg");
     const linkDom = document.getElementById('manualLink');
     const loadingIcon = document.getElementById('loadingIcon');
+    const descDom = document.getElementById('descText');
 
     if(!inviteCode){
-        errorDom.innerText = "未能识别有效的邀请码";
+        errorDom.innerText = "未识别到有效邀请参数";
         loadingIcon.style.display = "none";
         return;
     }
@@ -148,8 +280,14 @@ function getRandomDomain(){
     linkDom.href = targetUrl;
     linkDom.style.display = "inline-block";
 
-    // 原生页面跳转
-    window.location.href = targetUrl;
+    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    if(isWeChat){
+        loadingIcon.style.display = "none";
+        descDom.innerText = "请点击下方按钮继续访问";
+        return;
+    }
+
+    window.location.replace(targetUrl);
 })();
 </script>
 </body>
