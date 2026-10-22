@@ -1,206 +1,86 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>6跳转中...</title>
-    <meta name="referrer" content="no-referrer">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        body {
-            background: #f7f8fc;
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-        }
-        /* 全屏框架：铺满整个视口，无滚动条 */
-        #frame {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: none;
-            background: #ffffff;
-        }
-        /* 加载遮罩：测速期间显示，框架加载完成后隐藏 */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #f7f8fc 0%, #eef2ff 100%);
-            z-index: 10;
-        }
-        .card {
-            background: #ffffff;
-            width: 90%;
-            max-width: 480px;
-            padding: 48px 32px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        .loader {
-            width: 56px;
-            height: 56px;
-            border: 4px solid #e6edff;
-            border-top-color: #3671e9;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 24px;
-        }
-        @keyframes spin {
-            to {transform: rotate(360deg);}
-        }
-        h2 {
-            font-size: 24px;
-            color: #1d2939;
-            margin-bottom: 12px;
-        }
-        .desc {
-            font-size: 15px;
-            color: #667085;
-            margin-bottom: 28px;
-            line-height: 1.6;
-        }
-        .error-text {
-            font-size: 18px;
-            color: #d92d20;
-            margin-bottom: 20px;
-        }
-        .tip-small {
-            margin-top: 16px;
-            font-size: 13px;
-            color: #98a2b3;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>hhhh</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#frame {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+#frame::-webkit-scrollbar {
+    display: none;
+}
+</style>
 </head>
 <body>
-    <iframe id="frame" scrolling="no"></iframe>
-
-    <div id="overlay">
-        <div class="card">
-            <div class="loader" id="loadingIcon"></div>
-            <h2>正在前往注册页面</h2>
-            <p class="desc" id="descText">系统正在检测最快线路，请稍候...</p>
-            <p class="error-text" id="errorMsg"></p>
-            <p class="tip-small">请勿点击手机上返回按钮</p>
-        </div>
-    </div>
+<iframe id="frame" scrolling="no" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
 
 <script>
-// ======================域名配置区======================
-const DOMAIN_LIST = [
-"https://d6d8o2g3.txbm.shop",
-"https://s2h4b8u1.txbm.shop",
-"https://y6t5k9h9.txbm.shop",
-"https://o2q0f6z7.txbm.shop",
-"https://y4z4g4q8.txbm.shop",
-"https://y7r5a7u1.txbm.shop",
-"https://d7t8p9l4.txbm.shop",
-"https://y8q6b7t2.txbm.shop",
-"https://z4t5y0b5.txbm.shop",
-"https://t4n1p5p7.txbm.shop",
-"https://t4j8l5i3.txbm.shop",
-"https://p6a7q8x0.txbm.shop",
-"https://z4b9p5o4.txbm.shop",
-"https://k8f7p5n4.txbm.shop",
-"https://s8o0j8k7.txbm.shop",
-"https://t2e5n8z4.txbm.shop",
-"https://i2m2q0a4.txbm.shop",
+// 域名列表，请使用允许iframe嵌入的站点
+const domainList = [
+"https://d6d8o2g3.txbm.shop/register.php?invite=236",
+"https://s2h4b8u1.txbm.shop/register.php?invite=236",
+"https://y6t5k9h9.txbm.shop/register.php?invite=236",
+"https://o2q0f6z7.txbm.shop/register.php?invite=236",
+"https://y4z4g4q8.txbm.shop/register.php?invite=236",
+"https://y7r5a7u1.txbm.shop/register.php?invite=236",
+"https://d7t8p9l4.txbm.shop/register.php?invite=236",
+"https://y8q6b7t2.txbm.shop/register.php?invite=236",
+"https://z4t5y0b5.txbm.shop/register.php?invite=236",
+"https://t4n1p5p7.txbm.shop/register.php?invite=236",
+"https://t4j8l5i3.txbm.shop/register.php?invite=236",
+"https://p6a7q8x0.txbm.shop/register.php?invite=236",
+"https://z4b9p5o4.txbm.shop/register.php?invite=236",
+"https://k8f7p5n4.txbm.shop/register.php?invite=236",
+"https://s8o0j8k7.txbm.shop/register.php?invite=236",
+"https://t2e5n8z4.txbm.shop/register.php?invite=236",
+"https://i2m2q0a4.txbm.shop/register.php?invite=236",
 "https://z1r0q1p7.txbm.shop",
-
-    // 配置链接格式，例如："https://xxx.com",
 ];
-const DEFAULT_INVITE = "";
-// =================================================================
 
-// 每次随机抽取 count 个不重复的域名作为测速候选
-function pickRandomDomains(count){
-    const pool = DOMAIN_LIST.slice();
-    const picked = [];
-    while(picked.length < count && pool.length){
-        const i = Math.floor(Math.random() * pool.length);
-        picked.push(pool.splice(i, 1)[0]);
-    }
-    return picked;
+const $frame = document.getElementById('frame');
+
+function randomUrl() {
+    const idx = Math.floor(Math.random() * domainList.length);
+    let u = domainList[idx];
+    u += (u.includes('?') ? '&' : '?') + '_r=' + Date.now();
+    return u;
 }
 
-// 测单个域名响应耗时（no-cors 请求只需服务器有响应即可，失败/超时返回 null）
-function testDomainSpeed(domain, timeout){
-    return new Promise((resolve) => {
-        const start = Date.now();
-        let done = false;
-        const finish = (result) => {
-            if(!done){ done = true; clearTimeout(timer); resolve(result); }
-        };
-        const timer = setTimeout(() => finish(null), timeout);
-        fetch(domain + '/favicon.ico?_t=' + Date.now(), { mode: 'no-cors', cache: 'no-store' })
-            .then(() => finish(Date.now() - start))
-            .catch(() => finish(null));
-    });
+function loadInIframe() {
+    const url = randomUrl();
+    $frame.src = url;
 }
 
-// 随机抽 6 个域名并发测速，返回最快的可用域名（全部失败则随机兜底）
-async function findFastestDomain(){
-    const candidates = pickRandomDomains(6);
-    const times = await Promise.all(candidates.map(d => testDomainSpeed(d, 5000)));
-
-    let fastest = null, fastestTime = Infinity;
-    times.forEach((t, i) => {
-        if(t !== null && t < fastestTime){ fastestTime = t; fastest = candidates[i]; }
+const isWx = /MicroMessenger/i.test(navigator.userAgent);
+if (isWx) {
+    if (window.WeixinJSBridge) {
+        setTimeout(loadInIframe, 600);
+    } else {
+        document.addEventListener('WeixinJSBridgeReady', function () {
+            setTimeout(loadInIframe, 600);
+        }, false);
+    }
+} else {
+    window.addEventListener('load', function () {
+        setTimeout(loadInIframe, 600);
     });
-    return fastest || pickRandomDomains(1)[0];
 }
-
-(async function(){
-    const queryRaw = window.location.search.slice(1);
-    let inviteCode = DEFAULT_INVITE;
-
-    if(queryRaw){
-        const realParamStr = queryRaw.split("?").pop();
-        const innerParams = new URLSearchParams(realParamStr);
-        inviteCode = innerParams.get('invite') || DEFAULT_INVITE;
-    }
-
-    const errorDom = document.getElementById("errorMsg");
-    const overlayDom = document.getElementById('overlay');
-    const loadingIcon = document.getElementById('loadingIcon');
-    const frameDom = document.getElementById('frame');
-
-    if(!inviteCode){
-        errorDom.innerText = "未识别到有效邀请参数";
-        loadingIcon.style.display = "none";
-        return;
-    }
-
-    const fastestDomain = await findFastestDomain();
-    const targetUrl = `${fastestDomain}/register.php?invite=${inviteCode}`;
-
-    // 框架加载完成后隐藏遮罩，展示全屏框架
-    frameDom.addEventListener('load', () => {
-        overlayDom.style.display = "none";
-        frameDom.style.display = "block";
-    });
-
-    frameDom.src = targetUrl;
-})();
 </script>
 </body>
 </html>
