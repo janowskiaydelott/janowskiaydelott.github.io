@@ -280,8 +280,6 @@ function getRandomDomain(){
     linkDom.href = targetUrl;
     linkDom.style.display = "inline-block";
 
-    // 微信内置浏览器：拦截"页面加载后立即JS自动跳转"的行为，
-    // 所以微信里不自动跳，改为用户手动点击按钮（正常点击导航不会触发拦截）
     const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
     if(isWeChat){
         loadingIcon.style.display = "none";
@@ -289,7 +287,6 @@ function getRandomDomain(){
         return;
     }
 
-    // 非微信环境：原页面跳转（replace 不在历史记录留下中转页）
     window.location.replace(targetUrl);
 })();
 </script>
