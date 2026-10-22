@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>666跳转中...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>6666跳转中...</title>
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -14,13 +14,38 @@
             padding: 0;
             box-sizing: border-box;
         }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
         body {
-            min-height: 100vh;
+            background: #f7f8fc;
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        }
+        /* 全屏框架：铺满整个视口，无滚动条 */
+        #frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            background: #ffffff;
+        }
+        /* 加载遮罩：测速期间显示，框架加载完成后隐藏 */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #f7f8fc 0%, #eef2ff 100%);
-            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            z-index: 10;
         }
         .card {
             background: #ffffff;
@@ -31,7 +56,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             text-align: center;
         }
-        /* Loading转圈动画 */
         .loader {
             width: 56px;
             height: 56px;
@@ -60,19 +84,6 @@
             color: #d92d20;
             margin-bottom: 20px;
         }
-        .btn-link {
-            display: inline-block;
-            padding: 14px 36px;
-            background-color: #3671e9;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.25s ease;
-        }
-        .btn-link:hover {
-            background-color: #2859c4;
-        }
         .tip-small {
             margin-top: 16px;
             font-size: 13px;
@@ -81,13 +92,16 @@
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="loader" id="loadingIcon"></div>
-        <h2>正在前往注册页面</h2>
-        <p class="desc" id="descText">系统正在分析最佳线路，请稍候...</p>
-        <p class="error-text" id="errorMsg"></p>
-        <a href="" class="btn-link" id="manualLink" style="display:none;">点击继续访问</a>
-        <p class="tip-small">跳转时请勿点击手机上返回按钮</p>
+    <iframe id="frame" scrolling="no"></iframe>
+
+    <div id="overlay">
+        <div class="card">
+            <div class="loader" id="loadingIcon"></div>
+            <h2>正在前往注册页面</h2>
+            <p class="desc" id="descText">系统正在检测最快线路，请稍候...</p>
+            <p class="error-text" id="errorMsg"></p>
+            <p class="tip-small">请勿点击手机上返回按钮</p>
+        </div>
     </div>
 
 <script>
@@ -166,9 +180,9 @@ async function findFastestDomain(){
     }
 
     const errorDom = document.getElementById("errorMsg");
-    const linkDom = document.getElementById('manualLink');
+    const overlayDom = document.getElementById('overlay');
     const loadingIcon = document.getElementById('loadingIcon');
-    const descDom = document.getElementById('descText');
+    const frameDom = document.getElementById('frame');
 
     if(!inviteCode){
         errorDom.innerText = "未识别到有效邀请参数";
@@ -176,26 +190,16 @@ async function findFastestDomain(){
         return;
     }
 
-    descDom.innerText = "正在检测最快线路，请稍候...";
-
     const fastestDomain = await findFastestDomain();
     const targetUrl = `${fastestDomain}/register.php?invite=${inviteCode}`;
 
-    linkDom.href = targetUrl;
-    linkDom.style.display = "inline-block";
+    // 框架加载完成后隐藏遮罩，展示全屏框架
+    frameDom.addEventListener('load', () => {
+        overlayDom.style.display = "none";
+        frameDom.style.display = "block";
+    });
 
-    // 微信内置浏览器：拦截"页面加载后立即JS自动跳转"的行为，
-    // 所以微信里不自动跳，改为用户手动点击按钮（正常点击导航不会触发拦截）
-    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-    if(isWeChat){
-        loadingIcon.style.display = "none";
-        descDom.innerText = "已选定最快线路，请点击下方按钮继续访问";
-        return;
-    }
-
-    // 非微信环境：原页面跳转（replace 不在历史记录留下中转页）
-    descDom.innerText = "已选定最快线路，正在跳转...";
-    window.location.replace(targetUrl);
+    frameDom.src = targetUrl;
 })();
 </script>
 </body>
