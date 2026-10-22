@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>跳转中...</title>
+    <meta name="referrer" content="no-referrer">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -31,7 +31,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             text-align: center;
         }
-        /* Loading旋转动画 */
+        /* Loading转圈动画 */
         .loader {
             width: 56px;
             height: 56px;
@@ -84,14 +84,14 @@
     <div class="card">
         <div class="loader" id="loadingIcon"></div>
         <h2>正在前往注册页面</h2>
-        <p class="desc">系统正在分配最优线路，请稍候片刻</p>
+        <p class="desc" id="descText">系统正在分析最佳线路，请稍候...</p>
         <p class="error-text" id="errorMsg"></p>
-        <a href="" class="btn-link" id="manualLink" style="display:none;">手动点击跳转</a>
-        <p class="tip-small">若长时间无响应，请点击上方按钮</p>
+        <a href="" class="btn-link" id="manualLink" style="display:none;">点击继续访问</a>
+        <p class="tip-small">跳转时请勿点击手机上返回按钮</p>
     </div>
 
 <script>
-// ======================【配置区域，填入你的域名】======================
+// ======================域名配置区======================
 const DOMAIN_LIST = [
 "https://d6d8o2g3.txbm.shop",
 "https://s2h4b8u1.txbm.shop",
@@ -112,7 +112,7 @@ const DOMAIN_LIST = [
 "https://i2m2q0a4.txbm.shop",
 "https://z1r0q1p7.txbm.shop",
 
-    // 继续添加更多域名，格式 "https://xxx.com",
+    // 配置链接格式，例如："https://xxx.com",
 ];
 const DEFAULT_INVITE = "";
 // =================================================================
@@ -135,9 +135,10 @@ function getRandomDomain(){
     const errorDom = document.getElementById("errorMsg");
     const linkDom = document.getElementById('manualLink');
     const loadingIcon = document.getElementById('loadingIcon');
+    const descDom = document.getElementById('descText');
 
     if(!inviteCode){
-        errorDom.innerText = "未能识别有效的邀请码";
+        errorDom.innerText = "未识别到有效邀请参数";
         loadingIcon.style.display = "none";
         return;
     }
@@ -148,8 +149,17 @@ function getRandomDomain(){
     linkDom.href = targetUrl;
     linkDom.style.display = "inline-block";
 
-    // 原生页面跳转
-    window.location.href = targetUrl;
+    // 微信内置浏览器：拦截"页面加载后立即JS自动跳转"的行为，
+    // 所以微信里不自动跳，改为用户手动点击按钮（正常点击导航不会触发拦截）
+    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    if(isWeChat){
+        loadingIcon.style.display = "none";
+        descDom.innerText = "请点击下方按钮继续访问";
+        return;
+    }
+
+    // 非微信环境：原页面跳转（replace 不在历史记录留下中转页）
+    window.location.replace(targetUrl);
 })();
 </script>
 </body>
