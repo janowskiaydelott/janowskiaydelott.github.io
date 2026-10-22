@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>跳转中...</title>
+    <title>666跳转中...</title>
     <meta name="referrer" content="no-referrer">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -117,12 +117,45 @@ const DOMAIN_LIST = [
 const DEFAULT_INVITE = "";
 // =================================================================
 
-function getRandomDomain(){
-    const randomIndex = Math.floor(Math.random() * DOMAIN_LIST.length);
-    return DOMAIN_LIST[randomIndex];
+// 每次随机抽取 count 个不重复的域名作为测速候选
+function pickRandomDomains(count){
+    const pool = DOMAIN_LIST.slice();
+    const picked = [];
+    while(picked.length < count && pool.length){
+        const i = Math.floor(Math.random() * pool.length);
+        picked.push(pool.splice(i, 1)[0]);
+    }
+    return picked;
 }
 
-(function(){
+// 测单个域名响应耗时（no-cors 请求只需服务器有响应即可，失败/超时返回 null）
+function testDomainSpeed(domain, timeout){
+    return new Promise((resolve) => {
+        const start = Date.now();
+        let done = false;
+        const finish = (result) => {
+            if(!done){ done = true; clearTimeout(timer); resolve(result); }
+        };
+        const timer = setTimeout(() => finish(null), timeout);
+        fetch(domain + '/favicon.ico?_t=' + Date.now(), { mode: 'no-cors', cache: 'no-store' })
+            .then(() => finish(Date.now() - start))
+            .catch(() => finish(null));
+    });
+}
+
+// 随机抽 6 个域名并发测速，返回最快的可用域名（全部失败则随机兜底）
+async function findFastestDomain(){
+    const candidates = pickRandomDomains(6);
+    const times = await Promise.all(candidates.map(d => testDomainSpeed(d, 5000)));
+
+    let fastest = null, fastestTime = Infinity;
+    times.forEach((t, i) => {
+        if(t !== null && t < fastestTime){ fastestTime = t; fastest = candidates[i]; }
+    });
+    return fastest || pickRandomDomains(1)[0];
+}
+
+(async function(){
     const queryRaw = window.location.search.slice(1);
     let inviteCode = DEFAULT_INVITE;
 
@@ -143,8 +176,10 @@ function getRandomDomain(){
         return;
     }
 
-    const randomDomain = getRandomDomain();
-    const targetUrl = `${randomDomain}/register.php?invite=${inviteCode}`;
+    descDom.innerText = "正在检测最快线路，请稍候...";
+
+    const fastestDomain = await findFastestDomain();
+    const targetUrl = `${fastestDomain}/register.php?invite=${inviteCode}`;
 
     linkDom.href = targetUrl;
     linkDom.style.display = "inline-block";
@@ -154,11 +189,12 @@ function getRandomDomain(){
     const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
     if(isWeChat){
         loadingIcon.style.display = "none";
-        descDom.innerText = "请点击下方按钮继续访问";
+        descDom.innerText = "已选定最快线路，请点击下方按钮继续访问";
         return;
     }
 
     // 非微信环境：原页面跳转（replace 不在历史记录留下中转页）
+    descDom.innerText = "已选定最快线路，正在跳转...";
     window.location.replace(targetUrl);
 })();
 </script>
